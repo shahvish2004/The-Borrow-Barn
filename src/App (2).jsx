@@ -7,7 +7,7 @@ const B = {
   surface:   "#28190b",  surfaceUp: "#32200e",
   border:    "rgba(212,138,30,0.22)",  borderUp: "rgba(212,138,30,0.38)",
   // amber = primary action (was teal)
-  teal:      "#d48a1e",  tealDark:  "#b07318",  tealGlow: "rgba(212,138,30,0.28)",
+  teal:      "#d48a1e",  tealDark:  "#b07318",  tealGlow: "rgba(212,138,30,0.12)",
   // green = secondary (was amber)
   amber:     "#5a9448",  amberPale: "rgba(90,148,72,0.12)",
   blue:      "#016b9d",  yellow:    "#FED33C",
@@ -134,8 +134,8 @@ const MAINTENANCE_PROMISE = [
 const CATS = ["All","Lawn Care","Garden","Construction"];
 const CAT_META = {
   "Lawn Care":    { color:"#22c55e", dim:"rgba(34,197,94,0.1)",  icon:"🌿" },
-  "Garden":       { color:"#ffb830", dim:"rgba(255,184,48,0.1)", icon:"🌱" },
-  "Construction": { color:"#d48a1e", dim:"rgba(212,138,30,0.08)", icon:"🔩" },
+  "Garden":       { color:"#ffb830", dim:"rgba(255,184,48,0.05)", icon:"🌱" },
+  "Construction": { color:"#d48a1e", dim:"rgba(212,138,30,0.04)", icon:"🔩" },
 };
 
 const MEMBERSHIP_PLANS = [
@@ -582,7 +582,7 @@ function HomePage({ setPage }) {
                   </div>
                 ))}
               </div>
-              <div style={{marginTop:14,padding:"10px 14px",background:"rgba(212,138,30,0.08)",border:`1px solid ${B.teal}22`,borderRadius:10}}>
+              <div style={{marginTop:14,padding:"10px 14px",background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}22`,borderRadius:10}}>
                 <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,color:B.teal,lineHeight:1.6}}>
                   💡 Prices reflect fuel ($0.16/km), driver labour ($17.20/hr), and vehicle wear & tear ($0.54/km) — plus a 30% operating margin.
                 </p>
@@ -612,7 +612,7 @@ function HomePage({ setPage }) {
                   </div>
                 ))}
               </div>
-              <div style={{marginTop:14,padding:"10px 14px",background:"rgba(255,184,48,0.06)",border:"1px solid rgba(255,184,48,0.2)",borderRadius:10}}>
+              <div style={{marginTop:14,padding:"10px 14px",background:"rgba(255,184,48,0.03)",border:"1px solid rgba(255,184,48,0.2)",borderRadius:10}}>
                 <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,color:B.amber,lineHeight:1.6}}>
                   ⚡ Example: Zone 2 Standard delivery = <strong>$29</strong>. Zone 2 Express = <strong>$49</strong>. Both ways Zone 1 Standard = <strong>$30</strong>.
                 </p>
@@ -684,7 +684,7 @@ function HomePage({ setPage }) {
                   <div style={{fontSize:28,marginBottom:8}}>{t.icon}</div>
                   <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:15,color:B.white,marginBottom:4}}>{t.name}</div>
                   <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,color:B.muted,marginBottom:10,lineHeight:1.4}}>{t.desc}</div>
-                  <div style={{background:"rgba(255,184,48,0.08)",border:"1px solid rgba(255,184,48,0.2)",borderRadius:8,padding:"8px 10px",textAlign:"center"}}>
+                  <div style={{background:"rgba(255,184,48,0.04)",border:"1px solid rgba(255,184,48,0.2)",borderRadius:8,padding:"8px 10px",textAlign:"center"}}>
                     <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:800,fontSize:16,color:B.amber}}>
                       ~{t.partnerEarnPerRental * t.estRentalsPerMonth} TT/mo
                     </div>
@@ -1280,7 +1280,7 @@ function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, se
       </div>
 
       {/* Delivery callout strip */}
-      <div style={{background:"rgba(212,138,30,0.08)",borderBottom:`1px solid ${B.teal}22`,padding:"10px 28px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:10}}>
+      <div style={{background:"rgba(212,138,30,0.04)",borderBottom:`1px solid ${B.teal}22`,padding:"10px 28px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:10}}>
         <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
           <span style={{fontSize:18}}>🚚</span>
           <span style={{fontFamily:"'DM Sans',sans-serif",fontWeight:600,fontSize:13,color:B.teal}}>Delivery & return pickup available on every rental</span>
@@ -1441,7 +1441,7 @@ function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, se
           {/* ── Delivery Toggle ── */}
           <div style={{border:`1.5px solid ${delivery?B.teal:B.border}`,borderRadius:14,overflow:"hidden",marginBottom:14,transition:"border-color 0.2s"}}>
             {/* Header row */}
-            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"13px 16px",cursor:"pointer",background:delivery?"rgba(212,138,30,0.08)":B.surfaceUp}} onClick={()=>setDelivery(d=>!d)}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"13px 16px",cursor:"pointer",background:delivery?"rgba(212,138,30,0.04)":B.surfaceUp}} onClick={()=>setDelivery(d=>!d)}>
               <div style={{display:"flex",alignItems:"center",gap:10}}>
                 <span style={{fontSize:20}}>🚚</span>
                 <div>
@@ -1465,7 +1465,7 @@ function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, se
                       <div key={dir.id} onClick={()=>setDlvDir(dir)} style={{
                         display:"flex",alignItems:"center",gap:10,padding:"10px 14px",
                         borderRadius:10,cursor:"pointer",
-                        background:dlvDir.id===dir.id?"rgba(212,138,30,0.08)":B.surface,
+                        background:dlvDir.id===dir.id?"rgba(212,138,30,0.04)":B.surface,
                         border:`1.5px solid ${dlvDir.id===dir.id?B.teal:B.border}`,
                         transition:"all 0.15s",
                       }}>
@@ -1492,7 +1492,7 @@ function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, se
                     {DELIVERY_ZONES.map(z=>(
                       <div key={z.id} onClick={()=>setDlvZone(z)} style={{
                         padding:"10px 12px",borderRadius:10,cursor:"pointer",
-                        background:dlvZone.id===z.id?"rgba(212,138,30,0.08)":B.surface,
+                        background:dlvZone.id===z.id?"rgba(212,138,30,0.04)":B.surface,
                         border:`1.5px solid ${dlvZone.id===z.id?B.teal:B.border}`,
                         transition:"all 0.15s",
                       }}>
@@ -1517,7 +1517,7 @@ function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, se
                       <div key={sl.id} onClick={()=>setDlvSlot(sl)} style={{
                         display:"flex",alignItems:"center",gap:10,padding:"9px 13px",
                         borderRadius:10,cursor:"pointer",
-                        background:dlvSlot.id===sl.id?"rgba(212,138,30,0.08)":B.surface,
+                        background:dlvSlot.id===sl.id?"rgba(212,138,30,0.04)":B.surface,
                         border:`1.5px solid ${dlvSlot.id===sl.id?B.teal:B.border}`,
                         transition:"all 0.15s",
                       }}>
@@ -1603,7 +1603,7 @@ function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, se
                 <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.amber,fontWeight:600}}>💳 ${toast.deposit} deposit {toast.delivery?"payable to driver":"due at pickup"}</p>
               </div>
               {toast.delivery&&(
-                <div style={{background:"rgba(212,138,30,0.08)",border:`1px solid ${B.teal}33`,borderRadius:9,padding:"8px 14px"}}>
+                <div style={{background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}33`,borderRadius:9,padding:"8px 14px"}}>
                   <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.teal,fontWeight:600}}>🚚 ${toast.deliveryFee} delivery fee payable to driver · We'll call to confirm window</p>
                 </div>
               )}
@@ -1779,7 +1779,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
             : `Your tool is being reviewed. Once confirmed, your tokens will be credited to your account within 48 hours.`}
         </p>
         {submitted==="donate" && user && (
-          <div style={{background:"rgba(212,138,30,0.08)",border:`1px solid ${B.teal}33`,borderRadius:10,padding:"10px 16px",marginBottom:18}}>
+          <div style={{background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}33`,borderRadius:10,padding:"10px 16px",marginBottom:18}}>
             <p style={{fontFamily:"'DM Sans',sans-serif",fontWeight:600,fontSize:13,color:B.teal}}>
               🪙 {DONATE_CREDITS[donateForm.toolName]||50} tokens will be added once verified
             </p>
@@ -1799,9 +1799,9 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
         borderBottom:`1px solid ${B.border}`,padding:"52px 28px 44px",
         position:"relative",overflow:"hidden",
       }}>
-        <div style={{position:"absolute",top:-80,right:-80,width:360,height:360,borderRadius:"50%",background:`radial-gradient(circle,rgba(255,184,48,0.08),transparent 70%)`,pointerEvents:"none"}}/>
+        <div style={{position:"absolute",top:-80,right:-80,width:360,height:360,borderRadius:"50%",background:`radial-gradient(circle,rgba(255,184,48,0.04),transparent 70%)`,pointerEvents:"none"}}/>
         <div style={{maxWidth:900,margin:"0 auto",position:"relative"}}>
-          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,184,48,0.1)",border:"1px solid rgba(255,184,48,0.3)",borderRadius:20,padding:"5px 14px",marginBottom:18}}>
+          <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(255,184,48,0.05)",border:"1px solid rgba(255,184,48,0.3)",borderRadius:20,padding:"5px 14px",marginBottom:18}}>
             <span style={{fontSize:14}}>🤝</span>
             <span style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:12,color:B.amber,letterSpacing:"0.1em"}}>PARTNER PROGRAM</span>
           </div>
@@ -1859,7 +1859,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:24,alignItems:"start",marginBottom:36}}>
 
               {/* Earnings calculator */}
-              <div style={{background:B.surface,border:`1.5px solid ${B.amber}44`,borderRadius:18,padding:24,boxShadow:`0 0 30px rgba(255,184,48,0.06)`}}>
+              <div style={{background:B.surface,border:`1.5px solid ${B.amber}44`,borderRadius:18,padding:24,boxShadow:`0 0 30px rgba(255,184,48,0.03)`}}>
                 <h3 style={{fontFamily:"'DM Sans',sans-serif",fontWeight:800,fontSize:17,color:B.white,marginBottom:4}}>💰 Earnings Calculator</h3>
                 <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.muted,marginBottom:18}}>See what your tool could earn.</p>
 
@@ -1885,7 +1885,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
                   ))}
                 </div>
 
-                <div style={{marginTop:14,background:"rgba(255,184,48,0.06)",border:"1px solid rgba(255,184,48,0.2)",borderRadius:10,padding:"10px 14px"}}>
+                <div style={{marginTop:14,background:"rgba(255,184,48,0.03)",border:"1px solid rgba(255,184,48,0.2)",borderRadius:10,padding:"10px 14px"}}>
                   <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:B.amber,lineHeight:1.6}}>
                     💡 Based on {calcRentals} rentals/month at {calcTool.rentalCredits} TT/day.
                     Actual earnings depend on demand. Avg. platform rental rate shown.
@@ -1971,7 +1971,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
               <label className="lbl">Additional Notes</label>
               <textarea className="input-dark" style={{height:80,resize:"vertical"}} placeholder="Anything else we should know — accessories included, known quirks, storage situation…" value={placeForm.notes} onChange={e=>setPlaceForm({...placeForm,notes:e.target.value})}/>
 
-              <div style={{background:"rgba(255,184,48,0.06)",border:"1px solid rgba(255,184,48,0.18)",borderRadius:10,padding:"12px 16px",marginBottom:18}}>
+              <div style={{background:"rgba(255,184,48,0.03)",border:"1px solid rgba(255,184,48,0.18)",borderRadius:10,padding:"12px 16px",marginBottom:18}}>
                 <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:B.amber,lineHeight:1.65}}>
                   📋 <strong>Placement Agreement:</strong> Minimum 3-month placement. 2 weeks notice to withdraw your tool.
                   The Borrow Barn covers all maintenance. You earn 40% of rental tokens, paid monthly to your account.
@@ -1979,7 +1979,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
               </div>
 
               {/* ── We'll pick it up ── */}
-              <div style={{background:"rgba(212,138,30,0.08)",border:`1px solid ${B.teal}33`,borderRadius:12,padding:"14px 18px",marginBottom:18}}>
+              <div style={{background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}33`,borderRadius:12,padding:"14px 18px",marginBottom:18}}>
                 <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
                   <span style={{fontSize:20}}>🚚</span>
                   <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,color:B.teal}}>We'll Come Pick It Up — Free</div>
@@ -2008,7 +2008,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
                 Got a tool gathering dust that you'll never use again? Donate it to the The Borrow Barn network.
                 We assess it, add it to the platform, and credit your account with tokens — yours to spend on any rental.
               </p>
-              <div style={{background:"rgba(212,138,30,0.08)",border:`1px solid ${B.teal}33`,borderRadius:10,padding:"10px 14px",marginBottom:22}}>
+              <div style={{background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}33`,borderRadius:10,padding:"10px 14px",marginBottom:22}}>
                 <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:B.teal,lineHeight:1.6}}>
                   ℹ️ <strong>Donation vs. Placement:</strong> A donation means the tool becomes The Borrow Barn property and you receive a one-time token credit.
                   If you'd rather keep ownership and earn ongoing credits, use the <span style={{color:B.amber,cursor:"pointer",fontWeight:700}} onClick={()=>setTab("place")}>Place My Tool</span> tab instead.
@@ -2039,7 +2039,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
               <textarea className="input-dark" style={{height:76,resize:"vertical"}} placeholder="Brand, model, age, accessories included…" value={donateForm.notes} onChange={e=>setDonateForm({...donateForm,notes:e.target.value})}/>
 
               {donateForm.toolName && (
-                <div style={{background:"rgba(212,138,30,0.08)",border:`1px solid ${B.teal}33`,borderRadius:10,padding:"12px 16px",marginBottom:16}}>
+                <div style={{background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}33`,borderRadius:10,padding:"12px 16px",marginBottom:16}}>
                   <p style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:14,color:B.teal}}>
                     🎉 You'll earn <strong>{DONATE_CREDITS[donateForm.toolName]||50} TT</strong> for your {donateForm.toolName}
                   </p>
@@ -2048,7 +2048,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
               )}
 
               {/* Free pickup for donations */}
-              <div style={{background:"rgba(212,138,30,0.08)",border:`1px solid ${B.teal}22`,borderRadius:12,padding:"13px 16px",marginBottom:16}}>
+              <div style={{background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}22`,borderRadius:12,padding:"13px 16px",marginBottom:16}}>
                 <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:5}}>
                   <span style={{fontSize:18}}>🚚</span>
                   <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:13,color:B.teal}}>Free Pickup Available</div>
@@ -2079,7 +2079,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
                 ))}
               </div>
 
-              <div style={{marginTop:16,background:"rgba(255,184,48,0.06)",border:"1px solid rgba(255,184,48,0.18)",borderRadius:10,padding:"10px 14px"}}>
+              <div style={{marginTop:16,background:"rgba(255,184,48,0.03)",border:"1px solid rgba(255,184,48,0.18)",borderRadius:10,padding:"10px 14px"}}>
                 <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:B.amber,lineHeight:1.6}}>
                   💡 Have a valuable tool worth more? Consider the <strong>Partner Placement Program</strong> — you keep ownership and earn every time it's rented.
                 </p>
@@ -2302,7 +2302,7 @@ function ShopPage({ user, memberPlan }) {
         borderBottom:`1px solid ${B.border}`,
         padding:"52px 28px 40px", position:"relative", overflow:"hidden",
       }}>
-        <div style={{position:"absolute",top:-80,right:-80,width:340,height:340,borderRadius:"50%",background:`radial-gradient(circle,rgba(212,138,30,0.08),transparent 70%)`,pointerEvents:"none"}}/>
+        <div style={{position:"absolute",top:-80,right:-80,width:340,height:340,borderRadius:"50%",background:`radial-gradient(circle,rgba(212,138,30,0.04),transparent 70%)`,pointerEvents:"none"}}/>
         <div style={{maxWidth:1100,margin:"0 auto",position:"relative"}}>
           <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:20}}>
             <div>
@@ -2315,7 +2315,7 @@ function ShopPage({ user, memberPlan }) {
                 organised by the tool you've rented. Order online and pick up in-store or add delivery.
               </p>
               {isMember && (
-                <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(212,138,30,0.08)",border:`1px solid ${B.teal}33`,borderRadius:20,padding:"6px 14px",marginTop:14}}>
+                <div style={{display:"inline-flex",alignItems:"center",gap:8,background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}33`,borderRadius:20,padding:"6px 14px",marginTop:14}}>
                   <span style={{fontSize:14}}>🎉</span>
                   <span style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:13,color:B.teal}}>Member discount: 10% off everything in the shop</span>
                 </div>
@@ -2507,7 +2507,7 @@ function ShopPage({ user, memberPlan }) {
             <div style={{marginBottom:16}}>
               <label className="lbl">Delivery Address</label>
               <input className="input-dark" placeholder="123 Maple St, Waterloo, ON N2L 1A1" value={address} onChange={e=>setAddress(e.target.value)}/>
-              <div style={{background:"rgba(212,138,30,0.08)",border:`1px solid ${B.teal}22`,borderRadius:9,padding:"9px 12px",marginTop:-10,marginBottom:14}}>
+              <div style={{background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}22`,borderRadius:9,padding:"9px 12px",marginTop:-10,marginBottom:14}}>
                 <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:B.teal}}>📦 Next business day delivery · $15 flat fee</p>
               </div>
             </div>
@@ -2529,7 +2529,7 @@ function ShopPage({ user, memberPlan }) {
             </div>
           </div>
 
-          <div style={{background:"rgba(255,184,48,0.07)",border:"1px solid rgba(255,184,48,0.2)",borderRadius:10,padding:"11px 14px",marginBottom:18}}>
+          <div style={{background:"rgba(255,184,48,0.03)",border:"1px solid rgba(255,184,48,0.2)",borderRadius:10,padding:"11px 14px",marginBottom:18}}>
             <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.amber,lineHeight:1.6}}>
               💳 Payment collected at pickup or on delivery. We accept cash, debit, and credit card.
             </p>
@@ -2607,7 +2607,7 @@ function BundleCard({ p, discount, onAdd, inCart }) {
       background:`linear-gradient(135deg,${B.surface},#1a2535)`,
       border:`1.5px solid ${inCart?B.teal:B.amber}44`,
       borderRadius:14, padding:20, display:"flex", flexDirection:"column", gap:10,
-      boxShadow:`0 0 20px rgba(255,184,48,0.06)`,position:"relative",
+      boxShadow:`0 0 20px rgba(255,184,48,0.03)`,position:"relative",
     }}>
       <div style={{position:"absolute",top:-10,right:14,background:B.amber,color:"#2e1f0f",fontFamily:"'DM Sans',sans-serif",fontWeight:800,fontSize:10,borderRadius:20,padding:"2px 10px",letterSpacing:"0.06em"}}>
         SAVE ${saved.toFixed(0)}
