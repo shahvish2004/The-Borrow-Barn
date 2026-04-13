@@ -66,19 +66,7 @@ function calcDeliveryCost(zone, slot, direction) {
 //        "none" = no fuel required
 // Pricing: ~35% below Home Depot / United Rentals market rate
 // Market rates sourced from Home Depot Tool Rental, Sunbelt Rentals ON (2026)
-const [tools, setTools] = useState(TOOLS);
 
-useEffect(() => {
-  async function fetchTools() {
-    const { data, error } = await supabase.from('listings').select('*');
-    if (error) {
-      console.error('Supabase error:', error);
-    } else if (data && data.length > 0) {
-      setTools(data);
-    }
-  }
-  fetchTools();
-}, []);
 const TOOLS = [
   { id:1,  name:"Lawn Mower",        category:"Lawn Care",    icon:"🌿", credits:35, deposit:50, fuel:"gas",      available:2, total:3,  description:'Self-propelled gas mower, 21" cut',    marketRate:65  },
   { id:2,  name:"String Trimmer",    category:"Lawn Care",    icon:"🌱", credits:18, deposit:25, fuel:"gas",      available:3, total:4,  description:'Gas trimmer, 15" cutting path',         marketRate:30  },
@@ -103,7 +91,19 @@ const FUEL_LABELS = {
   electric: { icon:"🔋", label:"Electric — return charged",  color:"#d48a1e", tip:"Please return with battery fully charged, or plug in during use." },
   none:     { icon:"🔧", label:"No fuel required",           color:"#6a8eaa", tip:"Manual or human-powered tool — no fuel needed." },
 };
+const [tools, setTools] = useState(TOOLS);
 
+useEffect(() => {
+  async function fetchTools() {
+    const { data, error } = await supabase.from('listings').select('*');
+    if (error) {
+      console.error('Supabase error:', error);
+    } else if (data && data.length > 0) {
+      setTools(data);
+    }
+  }
+  fetchTools();
+}, []);
 const TOKEN_PACKS = [
   { id:"starter", tokens:50,  price:50,  label:"Starter",  bonus:0,  tag:null,         perToken:"1.00", color:B.mutedUp,  desc:"Perfect for occasional renters. One or two jobs covered." },
   { id:"value",   tokens:120, price:100, label:"Value",    bonus:20, tag:"MOST POPULAR",perToken:"0.83", color:B.teal,    desc:"Extra 20 bonus tokens included. The smart choice." },
