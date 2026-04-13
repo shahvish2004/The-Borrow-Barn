@@ -725,7 +725,7 @@ function HomePage({ setPage }) {
       {/* FOOTER */}
       <footer style={{background:B.surface,borderTop:`1px solid ${B.border}`,padding:"24px 28px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:14}}>
         <Wordmark size="sm"/>
-        <Wordmark size="sm"/>
+
         <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,color:B.muted}}>© 2026 The Borrow Barn™ · Rental Library · Trade mark registration pending</p>
       </footer>
     </div>
