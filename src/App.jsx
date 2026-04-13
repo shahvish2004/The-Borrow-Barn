@@ -164,12 +164,12 @@ const CSS = `
   @keyframes ov{from{opacity:0}to{opacity:1}}
   .pop{animation:pop 0.4s cubic-bezier(0.34,1.56,0.64,1);}
   @keyframes pop{from{transform:scale(0.6);opacity:0}to{transform:scale(1);opacity:1}}
-  .btn-teal{background:${B.teal};color:#18110a;border:none;border-radius:10px;padding:13px 26px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;letter-spacing:0.02em;transition:filter 0.15s,transform 0.1s;box-shadow:0 4px 20px ${B.tealGlow};}
+  .btn-teal{background:${B.teal};color:#2e1f0f;border:none;border-radius:10px;padding:13px 26px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;letter-spacing:0.02em;transition:filter 0.15s,transform 0.1s;box-shadow:0 4px 20px ${B.tealGlow};}
   .btn-teal:hover{filter:brightness(1.1);transform:translateY(-1px);}
   .btn-teal:disabled{opacity:0.35;cursor:not-allowed;transform:none;}
   .btn-ghost{background:transparent;color:${B.mutedUp};border:1px solid ${B.border};border-radius:10px;padding:13px 26px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;cursor:pointer;transition:border-color 0.15s,color 0.15s;}
   .btn-ghost:hover{border-color:${B.teal};color:${B.teal};}
-  .btn-amber{background:${B.amber};color:#18110a;border:none;border-radius:10px;padding:13px 26px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;letter-spacing:0.02em;transition:filter 0.15s;}
+  .btn-amber{background:${B.amber};color:#2e1f0f;border:none;border-radius:10px;padding:13px 26px;font-family:'DM Sans',sans-serif;font-weight:800;font-size:14px;cursor:pointer;letter-spacing:0.02em;transition:filter 0.15s;}
   .btn-amber:hover{filter:brightness(1.08);}
   .nav-link{fontFamily:'DM Sans',sans-serif;fontWeight:600;fontSize:14px;color:${B.mutedUp};cursor:pointer;transition:color 0.15s;background:none;border:none;padding:0;}
   .nav-link:hover{color:${B.teal};}
