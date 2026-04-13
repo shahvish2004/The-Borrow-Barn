@@ -66,7 +66,19 @@ function calcDeliveryCost(zone, slot, direction) {
 //        "none" = no fuel required
 // Pricing: ~35% below Home Depot / United Rentals market rate
 // Market rates sourced from Home Depot Tool Rental, Sunbelt Rentals ON (2026)
+const [tools, setTools] = useState(TOOLS);
 
+useEffect(() => {
+  async function fetchTools() {
+    const { data, error } = await supabase.from('listings').select('*');
+    if (error) {
+      console.error('Supabase error:', error);
+    } else if (data && data.length > 0) {
+      setTools(data);
+    }
+  }
+  fetchTools();
+}, []);
 const TOOLS = [
   { id:1,  name:"Lawn Mower",        category:"Lawn Care",    icon:"🌿", credits:35, deposit:50, fuel:"gas",      available:2, total:3,  description:'Self-propelled gas mower, 21" cut',    marketRate:65  },
   { id:2,  name:"String Trimmer",    category:"Lawn Care",    icon:"🌱", credits:18, deposit:25, fuel:"gas",      available:3, total:4,  description:'Gas trimmer, 15" cutting path',         marketRate:30  },
