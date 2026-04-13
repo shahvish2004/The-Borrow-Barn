@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { supabase } from './supabaseClient'
 // ─── BRAND — The Borrow Barn ─────────────────────────────────────────────────
 // Warm barnwood: deep oak · golden amber · forest green · cream
 const B = {
@@ -66,6 +66,19 @@ function calcDeliveryCost(zone, slot, direction) {
 //        "none" = no fuel required
 // Pricing: ~35% below Home Depot / United Rentals market rate
 // Market rates sourced from Home Depot Tool Rental, Sunbelt Rentals ON (2026)
+const [tools, setTools] = React.useState([]);
+
+React.useEffect(() => {
+  async function fetchTools() {
+    const { data, error } = await supabase.from('listings').select('*');
+    if (error) {
+      console.error('Supabase error:', error);
+    } else {
+      setTools(data);
+    }
+  }
+  fetchTools();
+}, []);
 const TOOLS = [
   { id:1,  name:"Lawn Mower",        category:"Lawn Care",    icon:"🌿", credits:35, deposit:50, fuel:"gas",      available:2, total:3,  description:'Self-propelled gas mower, 21" cut',    marketRate:65  },
   { id:2,  name:"String Trimmer",    category:"Lawn Care",    icon:"🌱", credits:18, deposit:25, fuel:"gas",      available:3, total:4,  description:'Gas trimmer, 15" cutting path',         marketRate:30  },
@@ -1057,7 +1070,7 @@ function TokensPage({ tokens, setTokens, txns, setTxns }) {
                   <div style={{background:B.surfaceUp,border:`1px solid ${B.border}`,borderRadius:10,padding:"10px 14px",marginBottom:18}}>
                     <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:600,fontSize:11,color:B.muted,letterSpacing:"0.08em",marginBottom:6}}>EXAMPLE RENTALS</div>
                     <div style={{display:"flex",flexDirection:"column",gap:3}}>
-                      {TOOLS.filter(t=>t.credits*1<=pkg.tokens).slice(0,3).map(t=>(
+                     {tools.filter(t=>t.credits*1<=pkg.tokens).slice(0,3).map(t=>(
                         <div key={t.id} style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:B.mutedUp}}>
                           {t.icon} {t.name} × {Math.floor(pkg.tokens/t.credits)} days
                         </div>
@@ -1212,7 +1225,7 @@ function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, se
   const [dlvAddr, setDlvAddr]         = useState("");
   const [dlvDate, setDlvDate]         = useState("");
 
-  const filtered    = TOOLS.filter(t=>(cat==="All"||t.category===cat)&&t.name.toLowerCase().includes(search.toLowerCase()));
+  const filtered = tools.filter(t=>(cat==="All"||t.category===cat)&&t.name.toLowerCase().includes(search.toLowerCase()));
   const deliveryCost = delivery ? calcDeliveryCost(dlvZone, dlvSlot, dlvDir) : 0;
 
   function confirmRent() {
@@ -1253,7 +1266,7 @@ function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, se
         <div style={{maxWidth:1160,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:14}}>
           <div>
             <h1 style={{fontFamily:"'DM Sans',sans-serif",fontWeight:800,fontSize:26,color:B.white,letterSpacing:"-0.02em"}}>Browse Tools</h1>
-            <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.muted,marginTop:2}}>{TOOLS.filter(t=>t.available>0).length} tools available · delivery from $20</p>
+            <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.muted,marginTop:2}}>{tools.filter(t=>t.available>0).length} tools available · delivery from $20</p>
           </div>
           <div style={{display:"flex",gap:10,alignItems:"center",flexWrap:"wrap"}}>
             <button className="btn-teal" onClick={()=>setPage("tokens")} style={{padding:"10px 18px",fontSize:13}}>🪙 Get Tokens</button>
@@ -2097,8 +2110,8 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
 // ══════════════════════════════════════════════════════════════════════════════
 function PricingPage({ setPage }) {
   const [filter, setFilter] = useState("All");
-  const shown = TOOLS.filter(t => filter === "All" || t.category === filter);
-  const avgSaving = Math.round(TOOLS.reduce((a,t)=>a+(1-t.credits/t.marketRate)*100,0)/TOOLS.length);
+  const shown = tools.filter(t => filter === "All" || t.category === filter);
+  const avgSaving = Math.round(tools.reduce((a,t)=>a+(1-t.credits/t.marketRate)*100,0)/TOOLS.length);
 
   return (
     <div style={{minHeight:"100vh",background:B.bg}}>
