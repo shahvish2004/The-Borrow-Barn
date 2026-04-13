@@ -1200,6 +1200,19 @@ function TokensPage({ tokens, setTokens, txns, setTxns }) {
 // ══════════════════════════════════════════════════════════════════════════════
 function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, setPage }) {
   const [cat, setCat]         = useState("All");
+  const [tools, setTools] = useState(TOOLS);
+
+useEffect(() => {
+  async function fetchTools() {
+    const { data, error } = await supabase.from('listings').select('*');
+    if (error) {
+      console.error('Supabase error:', error);
+    } else if (data && data.length > 0) {
+      setTools(data);
+    }
+  }
+  fetchTools();
+}, []);
   const [search, setSearch]   = useState("");
   const [modal, setModal]     = useState(null);
   const [selTool, setSelTool] = useState(null);
@@ -2098,9 +2111,8 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
 // ══════════════════════════════════════════════════════════════════════════════
 function PricingPage({ setPage }) {
   const [filter, setFilter] = useState("All");
-  const shown = tools.filter(t => filter === "All" || t.category === filter);
-  const avgSaving = Math.round(tools.reduce((a,t)=>a+(1-t.credits/t.marketRate)*100,0)/TOOLS.length);
-
+ const shown = TOOLS.filter(t => filter === "All" || t.category === filter);
+const avgSaving = Math.round(TOOLS.reduce((a,t)=>a+(1-t.credits/t.marketRate)*100,0)/TOOLS.length);
   return (
     <div style={{minHeight:"100vh",background:B.bg}}>
 
@@ -2254,17 +2266,6 @@ function ShopPage({ user, memberPlan }) {
   const [cat, setCat]       = useState("All");
   const [tools, setTools] = useState(TOOLS);
 
-useEffect(() => {
-  async function fetchTools() {
-    const { data, error } = await supabase.from('listings').select('*');
-    if (error) {
-      console.error('Supabase error:', error);
-    } else if (data && data.length > 0) {
-      setTools(data);
-    }
-  }
-  fetchTools();
-}, []);
   const [search, setSearch] = useState("");
   const [cart, setCart]     = useState([]);   // [{product, qty}]
   const [showCart, setShowCart]       = useState(false);
