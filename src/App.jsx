@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from './supabaseClient'
 // ─── BRAND — The Borrow Barn ─────────────────────────────────────────────────
 // Warm barnwood: deep oak · golden amber · forest green · cream
