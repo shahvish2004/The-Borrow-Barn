@@ -159,7 +159,7 @@ const CSS = `
   .fade-up-3{animation:fadeUp 0.5s ease 0.2s both;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
   .card-hover{transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;}
-  .card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.5)!important;}
+  .card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.5),0 0 30px rgba(212,138,30,0.18)!important;border-color:rgba(212,138,30,0.4)!important;}
   .overlay{animation:ov 0.2s ease;}
   @keyframes ov{from{opacity:0}to{opacity:1}}
   .pop{animation:pop 0.4s cubic-bezier(0.34,1.56,0.64,1);}
