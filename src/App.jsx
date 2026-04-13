@@ -277,12 +277,6 @@ function CircularBadge({ size=160 }) {
       {/* Barn logo image — clipped to inner circle */}
       <image href={LOGO_AMBER} x="32" y="32" width="276" height="276"
         clipPath={`url(#cc${id})`} preserveAspectRatio="xMidYMid meet"/>
-      {/* Copyright fine print */}
-      <text x="170" y="328" textAnchor="middle"
-        fontFamily="Arial,sans-serif" fontSize="9" fontWeight="500"
-        fill={CREAM} fillOpacity="0.2" letterSpacing="1.5">
-        © 2026 THE BORROW BARN · TRANSCEND PM · TM PENDING
-      </text>
     </svg>
   );
 }
@@ -431,9 +425,6 @@ function HomePage({ setPage }) {
 
             {/* Left */}
             <div>
-              <div className="fade-up" style={{marginBottom:20}}>
-                <Wordmark size="sm"/>
-              </div>
               <h1 className="fade-up fade-up-2" style={{
                 fontFamily:"'DM Sans',sans-serif",fontWeight:800,
                 fontSize:"clamp(34px,4.5vw,58px)",color:B.white,
