@@ -1204,13 +1204,17 @@ function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, se
 
 useEffect(() => {
   async function fetchTools() {
-    const { data, error } = await supabase.from('listings').select('*');
-    if (error) {
-      console.error('Supabase error:', error);
-    } else if (data && data.length > 0) {
-      setTools(data);
-    }
+  const { data, error } = await supabase.from('listings').select('*');
+  if (error) {
+    console.error('Supabase error:', error);
+  } else if (data && data.length > 0) {
+    const mapped = data.map(t => ({
+      ...t,
+      marketRate: t.market_rate
+    }));
+    setTools(mapped);
   }
+}
   fetchTools();
 }, []);
   const [search, setSearch]   = useState("");
