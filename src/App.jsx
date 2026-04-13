@@ -718,7 +718,7 @@ function HomePage({ setPage }) {
             Sign up in minutes. Buy tokens and start renting the same day.
           </p>
           <button className="btn-teal" onClick={()=>setPage("signup")} style={{fontSize:16,padding:"15px 36px"}}>Create Your Account →</button>
-          <div style={{marginTop:24}}><Wordmark size="sm"/></div>
+          
         </div>
       </section>
 
