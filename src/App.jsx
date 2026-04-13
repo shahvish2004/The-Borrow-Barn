@@ -2252,6 +2252,19 @@ function PricingPage({ setPage }) {
 // ══════════════════════════════════════════════════════════════════════════════
 function ShopPage({ user, memberPlan }) {
   const [cat, setCat]       = useState("All");
+  const [tools, setTools] = useState(TOOLS);
+
+useEffect(() => {
+  async function fetchTools() {
+    const { data, error } = await supabase.from('listings').select('*');
+    if (error) {
+      console.error('Supabase error:', error);
+    } else if (data && data.length > 0) {
+      setTools(data);
+    }
+  }
+  fetchTools();
+}, []);
   const [search, setSearch] = useState("");
   const [cart, setCart]     = useState([]);   // [{product, qty}]
   const [showCart, setShowCart]       = useState(false);
