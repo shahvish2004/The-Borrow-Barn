@@ -91,19 +91,7 @@ const FUEL_LABELS = {
   electric: { icon:"🔋", label:"Electric — return charged",  color:"#d48a1e", tip:"Please return with battery fully charged, or plug in during use." },
   none:     { icon:"🔧", label:"No fuel required",           color:"#6a8eaa", tip:"Manual or human-powered tool — no fuel needed." },
 };
-const [tools, setTools] = useState(TOOLS);
 
-useEffect(() => {
-  async function fetchTools() {
-    const { data, error } = await supabase.from('listings').select('*');
-    if (error) {
-      console.error('Supabase error:', error);
-    } else if (data && data.length > 0) {
-      setTools(data);
-    }
-  }
-  fetchTools();
-}, []);
 const TOKEN_PACKS = [
   { id:"starter", tokens:50,  price:50,  label:"Starter",  bonus:0,  tag:null,         perToken:"1.00", color:B.mutedUp,  desc:"Perfect for occasional renters. One or two jobs covered." },
   { id:"value",   tokens:120, price:100, label:"Value",    bonus:20, tag:"MOST POPULAR",perToken:"0.83", color:B.teal,    desc:"Extra 20 bonus tokens included. The smart choice." },
