@@ -443,6 +443,7 @@ function Nav({ page, setPage, user, tokens, onSignOut }) {
 // PAGE: HOME / LANDING
 // ══════════════════════════════════════════════════════════════════════════════
 function HomePage({ setPage }) {
+  const isMobile = useIsMobile();
   return (
     <div style={{minHeight:"100vh",background:B.bg}}>
 
@@ -450,13 +451,13 @@ function HomePage({ setPage }) {
       <section style={{
         minHeight:"88vh",display:"flex",alignItems:"center",
         background:B.bg,
-        padding:"60px 28px",position:"relative",overflow:"hidden",
+        padding:isMobile?"40px 16px":"60px 28px",position:"relative",overflow:"hidden",
       }}>
         {/* Grid lines bg */}
         <div style={{position:"absolute",inset:0,backgroundImage:`linear-gradient(${B.border} 1px,transparent 1px),linear-gradient(90deg,${B.border} 1px,transparent 1px)`,backgroundSize:"60px 60px",opacity:0.3,pointerEvents:"none"}}/>
 
         <div style={{maxWidth:1100,margin:"0 auto",width:"100%",position:"relative"}}>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:60,alignItems:"center"}}>
+          <div style={{display:"grid",gridTemplateColumns:isMobile?"1fr":"1fr 1fr",gap:isMobile?32:60,alignItems:"center"}}>
 
             {/* Left */}
             <div>
