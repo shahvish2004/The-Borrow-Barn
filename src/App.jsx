@@ -315,18 +315,20 @@ function Wordmark({ size="md" }) {
           The Borrow <span style={{color:AMBER}}>Barn</span>
           <sup style={{fontSize:cfg.name*0.4,color:AMBER,marginLeft:2,verticalAlign:"super"}}>™</sup>
         </div>
-        <div style={{
-          fontFamily:"'DM Sans',sans-serif",
-          fontStyle:"italic",
-          fontWeight:300,
-          fontSize:cfg.sub,
-          color:CREAM,
-          opacity:0.42,
-          letterSpacing:"0.04em",
-          marginTop:3,
-        }}>
-          Borrow what you need. Lend what you don't.
-        </div>
+        {size !== "sm" && (
+          <div style={{
+            fontFamily:"'DM Sans',sans-serif",
+            fontStyle:"italic",
+            fontWeight:300,
+            fontSize:cfg.sub,
+            color:CREAM,
+            opacity:0.42,
+            letterSpacing:"0.04em",
+            marginTop:3,
+          }}>
+            Borrow what you need. Lend what you don't.
+          </div>
+        )}
       </div>
     </div>
   );
