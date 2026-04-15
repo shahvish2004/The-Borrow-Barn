@@ -18,7 +18,7 @@ const B = {
   orange:    "#c87820",
 };
 // ─── RESPONSIVE HOOK ──────────────────────────────────────────────────────────
-function useIsMobile(breakpoint = 900) {
+function useIsMobile(breakpoint = 1024) {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < breakpoint);
   React.useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth < breakpoint);
