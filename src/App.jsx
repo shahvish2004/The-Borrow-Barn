@@ -410,9 +410,9 @@ function Nav({ page, setPage, user, tokens, onSignOut }) {
         overflow:"hidden",
       }}>
         {/* Logo */}
-        <div onClick={()=>setPage(user?"library":"home")} style={{cursor:"pointer",flexShrink:0}}>
-          <Wordmark size="sm"/>
-        </div>
+       <div onClick={()=>setPage(user?"library":"home")} style={{cursor:"pointer",flexShrink:0,maxWidth:120,overflow:"hidden"}}>
+  <Wordmark size="sm"/>
+</div>
 
         {/* Desktop links - hidden on mobile via CSS */}
         <div className="nav-desktop" style={{alignItems:"center",gap:6}}>
