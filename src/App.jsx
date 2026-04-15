@@ -160,7 +160,7 @@ const CSS = `
   *{box-sizing:border-box;margin:0;padding:0;}
 body{background:${B.bg};overflow-x:hidden;}
   Find the entire line that has all the scrollbar stuff mixed up and replace it with these clean separate lines:
-body{background:${B.bg};overflow-x:hidden;}
+html{width:100%;overflow-x:hidden;}body{background:${B.bg};overflow-x:hidden;width:100%;}
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:${B.bg};}
 ::-webkit-scrollbar-thumb{background:${B.border};border-radius:3px;}
