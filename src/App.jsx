@@ -187,6 +187,7 @@ body{background:${B.bg};overflow-x:hidden;}
   .nav-mobile{display:none;}
   @media(max-width:1024px){.nav-desktop{display:none!important;}.nav-mobile{display:flex!important;}}
   @media(min-width:1025px){.nav-desktop{display:flex!important;}.nav-mobile{display:none!important;}}
+  @media(max-width:1024px){.nav-desktop{display:none!important;}.nav-mobile{display:flex!important;}nav{overflow:visible!important;}}
   .glow-teal{box-shadow:0 0 40px ${B.tealGlow};}
   .pulse{animation:pulse 2.5s ease infinite;}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 ${B.tealGlow}}50%{box-shadow:0 0 0 10px transparent}}
@@ -410,8 +411,7 @@ function Nav({ page, setPage, user, tokens, onSignOut }) {
         background:`${B.surface}ee`,backdropFilter:"blur(16px)",
         borderBottom:`1px solid ${B.border}`,
         padding:"0 20px",height:66,
-        display:"flex",alignItems:"center",justifyContent:"space-between",
-        overflow:"hidden",
+display:"flex",alignItems:"center",justifyContent:"space-between",
       }}>
         {/* Logo */}
        <div onClick={()=>setPage(user?"library":"home")} style={{cursor:"pointer",flexShrink:0,maxWidth:120,overflow:"hidden"}}>
