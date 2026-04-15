@@ -500,11 +500,11 @@ function HomePage({ setPage }) {
               </div>
             </div>
 
-            {/* Right — big circular badge with glow */}
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",animation:"fadeUp 0.6s ease 0.3s both"}}>
-              <div style={{position:"relative",display:"inline-block"}}>
-
-                <CircularBadge size={320}/>
+           {/* Right — big circular badge with glow */}
+{!isMobile && (
+  <div style={{display:"flex",alignItems:"center",justifyContent:"center",animation:"fadeUp 0.6s ease 0.3s both"}}>
+    <div style={{position:"relative",display:"inline-block"}}>
+      <CircularBadge size={320}/>
                 {/* Copyright caption under badge */}
                 <div style={{textAlign:"center",marginTop:14}}>
                   <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,color:"rgba(238,244,255,0.3)",letterSpacing:"0.1em"}}>
@@ -513,7 +513,8 @@ function HomePage({ setPage }) {
                 </div>
               </div>
             </div>
-          </div>
+)}
+</div>
         </div>
       </section>
 
