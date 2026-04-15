@@ -1234,6 +1234,7 @@ function TokensPage({ tokens, setTokens, txns, setTxns }) {
 // PAGE: LIBRARY
 // ══════════════════════════════════════════════════════════════════════════════
 function LibraryPage({ tokens, setTokens, txns, setTxns, rentals, setRentals, setPage }) {
+  const isMobile = useIsMobile();
   const [cat, setCat]         = useState("All");
   const [tools, setTools] = useState(TOOLS);
 
@@ -1302,7 +1303,7 @@ useEffect(() => {
     <div style={{minHeight:"100vh",background:B.bg}}>
 
       {/* Top bar */}
-      <div style={{background:B.surface,borderBottom:`1px solid ${B.border}`,padding:"20px 28px"}}>
+      <div style={{background:B.surface,borderBottom:`1px solid ${B.border}`,padding:isMobile?"14px 16px":"20px 28px"}}>
         <div style={{maxWidth:1160,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:14}}>
           <div>
             <h1 style={{fontFamily:"'DM Sans',sans-serif",fontWeight:800,fontSize:26,color:B.white,letterSpacing:"-0.02em"}}>Browse Tools</h1>
@@ -1365,7 +1366,7 @@ useEffect(() => {
       )}
 
       {/* Grid */}
-      <div style={{maxWidth:1160,margin:"0 auto",padding:"28px 28px 64px",display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:16}}>
+      <div style={{maxWidth:1160,margin:"0 auto",padding:isMobile?"16px 12px 64px":"28px 28px 64px",display:"grid",gridTemplateColumns:isMobile?"1fr":"repeat(auto-fill,minmax(260px,1fr))",gap:16}}>
         {filtered.map(tool=>{
           const cm=CAT_META[tool.category];
           const avail=tool.available===0?B.red:tool.available===1?B.amber:B.green;
