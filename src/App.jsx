@@ -428,7 +428,7 @@ function Nav({ page, setPage, user, tokens, onSignOut }) {
               {menuOpen ? "✕" : "☰"}
             </button>
           </div>
-        )}
+    
       </nav>
 
       {/* Mobile dropdown menu */}
