@@ -17,7 +17,16 @@ const B = {
   red:       "#d45030",  redDim:    "rgba(212,80,48,0.12)",
   orange:    "#c87820",
 };
-
+// ─── RESPONSIVE HOOK ──────────────────────────────────────────────────────────
+function useIsMobile(breakpoint = 900) {
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < breakpoint);
+  React.useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < breakpoint);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, [breakpoint]);
+  return isMobile;
+}
 // ─── LOGO COLOUR CONSTANTS ──────────────────────────────────────────────────
 const AMBER   = "#d48a1e";   // golden amber
 const AMBERLT = "#e8a828";   // amber light
