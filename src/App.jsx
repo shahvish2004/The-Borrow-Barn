@@ -362,49 +362,83 @@ function Modal({ children, onClose, wide=false }) {
 
 // ─── NAVIGATION BAR ───────────────────────────────────────────────────────────
 function Nav({ page, setPage, user, tokens, onSignOut }) {
-  return (
-    <nav style={{
-      position:"sticky",top:0,zIndex:200,
-      background:`${B.surface}ee`,backdropFilter:"blur(16px)",
-      borderBottom:`1px solid ${B.border}`,
-      padding:"0 28px",height:66,
-      display:"flex",alignItems:"center",justifyContent:"space-between",
-    }}>
-      <div onClick={()=>setPage(user?"library":"home")} style={{cursor:"pointer"}}>
-        <Wordmark size="sm"/>
-      </div>
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const isMobile = useIsMobile(); // add this hook (see below)
 
-      <div style={{display:"flex",alignItems:"center",gap:6}}>
-        {user ? (
-          <>
-            <button className="nav-link" onClick={()=>setPage("library")} style={{padding:"8px 14px",borderRadius:8,background:page==="library"?B.surfaceUp:"transparent",color:page==="library"?B.teal:B.mutedUp}}>Browse Tools</button>
-            <button className="nav-link" onClick={()=>setPage("shop")}    style={{padding:"8px 14px",borderRadius:8,background:page==="shop"?B.surfaceUp:"transparent",color:page==="shop"?B.teal:B.mutedUp}}>🛒 Shop</button>
-            <button className="nav-link" onClick={()=>setPage("tokens")}  style={{padding:"8px 14px",borderRadius:8,background:page==="tokens"?B.surfaceUp:"transparent",color:page==="tokens"?B.teal:B.mutedUp}}>Get Tokens</button>
-            <button className="nav-link" onClick={()=>setPage("partner")} style={{padding:"8px 14px",borderRadius:8,background:page==="partner"?B.surfaceUp:"transparent",color:page==="partner"?B.amber:B.mutedUp}}>
-              🤝 Partner Program
-            </button>
-            <button className="nav-link" onClick={()=>setPage("account")} style={{padding:"8px 14px",borderRadius:8,background:page==="account"?B.surfaceUp:"transparent",color:page==="account"?B.teal:B.mutedUp}}>My Account</button>
-            <div style={{width:1,height:24,background:B.border,margin:"0 6px"}}/>
-            <TokenBadge tokens={tokens}/>
-            <div style={{width:34,height:34,borderRadius:"50%",background:`linear-gradient(135deg,${B.teal},${B.tealDark})`,display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"'DM Sans',sans-serif",fontWeight:800,fontSize:13,color:"#2e1f0f",cursor:"pointer",flexShrink:0}} onClick={()=>setPage("account")}>
-              {user.name.charAt(0).toUpperCase()}
-            </div>
-          </>
-        ) : (
-          <>
-            <button className="nav-link" onClick={()=>setPage("home")}    style={{padding:"8px 14px",borderRadius:8,color:page==="home"?B.teal:B.mutedUp}}>Home</button>
-            <button className="nav-link" onClick={()=>setPage("shop")}    style={{padding:"8px 14px",borderRadius:8,color:page==="shop"?B.teal:B.mutedUp}}>🛒 Shop</button>
-            <button className="nav-link" onClick={()=>setPage("pricing")} style={{padding:"8px 14px",borderRadius:8,color:page==="pricing"?B.teal:B.mutedUp}}>Pricing</button>
-            <button className="nav-link" onClick={()=>setPage("partner")} style={{padding:"8px 14px",borderRadius:8,color:page==="partner"?B.amber:B.mutedUp}}>🤝 Partner Program</button>
-            <button className="nav-link" onClick={()=>setPage("login")}   style={{padding:"8px 14px",borderRadius:8,color:page==="login"?B.teal:B.mutedUp}}>Log In</button>
-            <button className="btn-teal" onClick={()=>setPage("signup")}  style={{padding:"9px 20px",fontSize:13}}>Join The Barn →</button>
-          </>
-        )}
+  const navLinks = user ? (
+    <>
+      <button className="nav-link" onClick={()=>{setPage("library");setMenuOpen(false)}} style={{padding:"8px 14px",borderRadius:8,background:page==="library"?B.surfaceUp:"transparent",color:page==="library"?B.teal:B.mutedUp}}>Browse Tools</button>
+      <button className="nav-link" onClick={()=>{setPage("shop");setMenuOpen(false)}}    style={{padding:"8px 14px",borderRadius:8,background:page==="shop"?B.surfaceUp:"transparent",color:page==="shop"?B.teal:B.mutedUp}}>🛒 Shop</button>
+      <button className="nav-link" onClick={()=>{setPage("tokens");setMenuOpen(false)}}  style={{padding:"8px 14px",borderRadius:8,background:page==="tokens"?B.surfaceUp:"transparent",color:page==="tokens"?B.teal:B.mutedUp}}>Get Tokens</button>
+      <button className="nav-link" onClick={()=>{setPage("partner");setMenuOpen(false)}} style={{padding:"8px 14px",borderRadius:8,background:page==="partner"?B.surfaceUp:"transparent",color:page==="partner"?B.amber:B.mutedUp}}>🤝 Partner</button>
+      <button className="nav-link" onClick={()=>{setPage("account");setMenuOpen(false)}} style={{padding:"8px 14px",borderRadius:8,background:page==="account"?B.surfaceUp:"transparent",color:page==="account"?B.teal:B.mutedUp}}>My Account</button>
+      <div style={{width:1,height:24,background:B.border,margin:"0 6px"}}/>
+      <TokenBadge tokens={tokens}/>
+      <div style={{width:34,height:34,borderRadius:"50%",background:`linear-gradient(135deg,${B.teal},${B.tealDark})`,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:800,fontSize:13,color:"#2e1f0f",cursor:"pointer",flexShrink:0}} onClick={()=>{setPage("account");setMenuOpen(false)}}>
+        {user.name.charAt(0).toUpperCase()}
       </div>
-    </nav>
+    </>
+  ) : (
+    <>
+      <button className="nav-link" onClick={()=>{setPage("home");setMenuOpen(false)}}    style={{padding:"8px 14px",borderRadius:8,color:page==="home"?B.teal:B.mutedUp}}>Home</button>
+      <button className="nav-link" onClick={()=>{setPage("shop");setMenuOpen(false)}}    style={{padding:"8px 14px",borderRadius:8,color:page==="shop"?B.teal:B.mutedUp}}>🛒 Shop</button>
+      <button className="nav-link" onClick={()=>{setPage("pricing");setMenuOpen(false)}} style={{padding:"8px 14px",borderRadius:8,color:page==="pricing"?B.teal:B.mutedUp}}>Pricing</button>
+      <button className="nav-link" onClick={()=>{setPage("partner");setMenuOpen(false)}} style={{padding:"8px 14px",borderRadius:8,color:page==="partner"?B.amber:B.mutedUp}}>🤝 Partner</button>
+      <button className="nav-link" onClick={()=>{setPage("login");setMenuOpen(false)}}   style={{padding:"8px 14px",borderRadius:8,color:page==="login"?B.teal:B.mutedUp}}>Log In</button>
+      <button className="btn-teal" onClick={()=>{setPage("signup");setMenuOpen(false)}}  style={{padding:"9px 20px",fontSize:13}}>Join The Barn →</button>
+    </>
+  );
+
+  return (
+    <>
+      <nav style={{
+        position:"sticky",top:0,zIndex:200,
+        background:`${B.surface}ee`,backdropFilter:"blur(16px)",
+        borderBottom:`1px solid ${B.border}`,
+        padding:"0 20px",height:66,
+        display:"flex",alignItems:"center",justifyContent:"space-between",
+      }}>
+        {/* Logo */}
+        <div onClick={()=>setPage(user?"library":"home")} style={{cursor:"pointer",flexShrink:0}}>
+          <Wordmark size="sm"/>
+        </div>
+
+        {/* Desktop links */}
+        {!isMobile && (
+          <div style={{display:"flex",alignItems:"center",gap:6}}>
+            {navLinks}
+          </div>
+        )}
+
+        {/* Mobile: token badge + hamburger */}
+        {isMobile && (
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            {user && <TokenBadge tokens={tokens}/>}
+            <button
+              onClick={()=>setMenuOpen(o=>!o)}
+              style={{background:"none",border:`1px solid ${B.border}`,borderRadius:8,
+                padding:"6px 10px",cursor:"pointer",color:B.text,fontSize:20,lineHeight:1}}
+            >
+              {menuOpen ? "✕" : "☰"}
+            </button>
+          </div>
+        )}
+      </nav>
+
+      {/* Mobile dropdown menu */}
+      {isMobile && menuOpen && (
+        <div style={{
+          position:"fixed",top:66,left:0,right:0,zIndex:199,
+          background:B.surface,borderBottom:`1px solid ${B.border}`,
+          display:"flex",flexDirection:"column",padding:"12px 16px 20px",gap:4,
+          boxShadow:"0 8px 32px rgba(0,0,0,0.4)",
+        }}>
+          {navLinks}
+        </div>
+      )}
+    </>
   );
 }
-
 // ══════════════════════════════════════════════════════════════════════════════
 // PAGE: HOME / LANDING
 // ══════════════════════════════════════════════════════════════════════════════
