@@ -157,8 +157,8 @@ const MEMBERSHIP_PLANS = [
 // ─── GLOBAL STYLES STRING ─────────────────────────────────────────────────────
 const CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Rye&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Mono:wght@400;500&display=swap');
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{background:${B.bg};}
+  *{box-sizing:border-box;margin:0;padding:0;max-width:100%;}
+body{background:${B.bg};overflow-x:hidden;}
   ::-webkit-scrollbar{width:5px;} ::-webkit-scrollbar-track{background:${B.bg};} ::-webkit-scrollbar-thumb{background:${B.border};border-radius:3px;}
   input,select,textarea{font-family:'DM Sans',sans-serif;}
   input:focus,select:focus,textarea:focus{outline:none!important;border-color:${B.teal}!important;box-shadow:0 0 0 3px ${B.tealGlow}!important;}
