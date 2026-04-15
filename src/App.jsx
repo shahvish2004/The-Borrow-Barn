@@ -413,18 +413,15 @@ function Nav({ page, setPage, user, tokens, onSignOut }) {
         </div>
 
         {/* Desktop links */}
-        {!isMobile && (
-          <div style={{display:"flex",alignItems:"center",gap:6}}>
-            {navLinks}
-          </div>
-        )}
+<div className="nav-desktop" style={{alignItems:"center",gap:6}}>
+  {navLinks}
+</div>
 
-        {/* Mobile: token badge + hamburger */}
-        {isMobile && (
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            {user && <TokenBadge tokens={tokens}/>}
-            <button
-              onClick={()=>setMenuOpen(o=>!o)}
+       {/* Mobile: token badge + hamburger */}
+<div className="nav-mobile" style={{alignItems:"center",gap:10}}>
+  {user && <TokenBadge tokens={tokens}/>}
+  <button
+         onClick={()=>setMenuOpen(o=>!o)}
               style={{background:"none",border:`1px solid ${B.border}`,borderRadius:8,
                 padding:"6px 10px",cursor:"pointer",color:B.text,fontSize:20,lineHeight:1}}
             >
