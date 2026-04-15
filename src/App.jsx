@@ -586,7 +586,7 @@ function HomePage({ setPage }) {
           </div>
 
           {/* Direction choice cards */}
-          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:14,marginBottom:36}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:14,marginBottom:36}}>
             {DELIVERY_DIRECTIONS.map(d=>(
               <div key={d.id} className="card-hover" style={{background:B.surface,border:`1px solid ${B.border}`,borderRadius:14,padding:20,textAlign:"center"}}>
                 <div style={{fontSize:28,marginBottom:8}}>{d.icon}</div>
@@ -597,7 +597,7 @@ function HomePage({ setPage }) {
           </div>
 
           {/* Zone + slot pricing grid */}
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:32}}>
+<div style={{display:"grid",gridTemplateColumns:useIsMobile()?"1fr":"1fr 1fr",gap:20,marginBottom:32}}>
 
             {/* Distance zones */}
             <div style={{background:B.surface,border:`1px solid ${B.border}`,borderRadius:16,padding:22}}>
