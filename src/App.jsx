@@ -374,7 +374,6 @@ function Modal({ children, onClose, wide=false }) {
 // ─── NAVIGATION BAR ───────────────────────────────────────────────────────────
 function Nav({ page, setPage, user, tokens, onSignOut }) {
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const isMobile = useIsMobile(); // add this hook (see below)
 
   const navLinks = user ? (
     <>
@@ -408,33 +407,32 @@ function Nav({ page, setPage, user, tokens, onSignOut }) {
         borderBottom:`1px solid ${B.border}`,
         padding:"0 20px",height:66,
         display:"flex",alignItems:"center",justifyContent:"space-between",
+        overflow:"hidden",
       }}>
         {/* Logo */}
         <div onClick={()=>setPage(user?"library":"home")} style={{cursor:"pointer",flexShrink:0}}>
           <Wordmark size="sm"/>
         </div>
 
-        {/* Desktop links */}
-<div className="nav-desktop" style={{alignItems:"center",gap:6}}>
-  {navLinks}
-</div>
+        {/* Desktop links - hidden on mobile via CSS */}
+        <div className="nav-desktop" style={{alignItems:"center",gap:6}}>
+          {navLinks}
+        </div>
 
-       {/* Mobile: token badge + hamburger */}
-<div className="nav-mobile" style={{alignItems:"center",gap:10}}>
-  {user && <TokenBadge tokens={tokens}/>}
-  <button
-         onClick={()=>setMenuOpen(o=>!o)}
-              style={{background:"none",border:`1px solid ${B.border}`,borderRadius:8,
-                padding:"6px 10px",cursor:"pointer",color:B.text,fontSize:20,lineHeight:1}}
-            >
-              {menuOpen ? "✕" : "☰"}
-            </button>
-          </div>
-    
+        {/* Mobile hamburger - hidden on desktop via CSS */}
+        <div className="nav-mobile" style={{alignItems:"center",gap:10}}>
+          {user && <TokenBadge tokens={tokens}/>}
+          <button onClick={()=>setMenuOpen(o=>!o)}
+            style={{background:"none",border:`1px solid ${B.border}`,borderRadius:8,
+              padding:"6px 10px",cursor:"pointer",color:B.text,fontSize:20,lineHeight:1,
+              flexShrink:0}}>
+            {menuOpen ? "✕" : "☰"}
+          </button>
+        </div>
       </nav>
 
-      {/* Mobile dropdown menu */}
-      {isMobile && menuOpen && (
+      {/* Mobile dropdown menu - toggled by button */}
+      {menuOpen && (
         <div style={{
           position:"fixed",top:66,left:0,right:0,zIndex:199,
           background:B.surface,borderBottom:`1px solid ${B.border}`,
