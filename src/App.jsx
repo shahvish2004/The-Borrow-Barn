@@ -76,7 +76,7 @@ function calcDeliveryCost(zone, slot, direction) {
 // Pricing: ~35% below Home Depot / United Rentals market rate
 // Market rates sourced from Home Depot Tool Rental, Sunbelt Rentals ON (2026)
 
-const TOOLS = [
+ const TOOLS =[
   { id:1,  name:"Lawn Mower",        category:"Lawn Care",    icon:"🌿", credits:35, deposit:50, fuel:"gas",      available:2, total:3,  description:'Self-propelled gas mower, 21" cut',    marketRate:65  },
   { id:2,  name:"String Trimmer",    category:"Lawn Care",    icon:"🌱", credits:18, deposit:25, fuel:"gas",      available:3, total:4,  description:'Gas trimmer, 15" cutting path',         marketRate:30  },
   { id:3,  name:"Hedge Trimmer",     category:"Lawn Care",    icon:"✂️", credits:20, deposit:25, fuel:"electric", available:1, total:2,  description:'Dual-action blades, 24" bar',           marketRate:35  },
@@ -101,7 +101,7 @@ const FUEL_LABELS = {
   none:     { icon:"🔧", label:"No fuel required",           color:"#6a8eaa", tip:"Manual or human-powered tool — no fuel needed." },
 };
 
-const TOKEN_PACKS = [
+ const TOKEN_PACKS= [
   { id:"starter", tokens:50,  price:50,  label:"Starter",  bonus:0,  tag:null,         perToken:"1.00", color:B.mutedUp,  desc:"Perfect for occasional renters. One or two jobs covered." },
   { id:"value",   tokens:120, price:100, label:"Value",    bonus:20, tag:"MOST POPULAR",perToken:"0.83", color:B.teal,    desc:"Extra 20 bonus tokens included. The smart choice." },
   { id:"pro",     tokens:275, price:200, label:"Pro",      bonus:75, tag:"BEST VALUE",  perToken:"0.73", color:B.amber,   desc:"75 bonus tokens. For frequent borrowers and serious projects." },
@@ -944,13 +944,13 @@ function LoginPage({ setPage, onAuth }) {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  function handleLogin() {
-    if (!email||!password) { setError("Please fill in all fields."); return; }
-    setLoading(true); setError("");
-    setTimeout(()=>{ onAuth({ name:"Returning Member", email, plan:"member" }); },800);
-  }
-
+async function handleLogin() {
+  if (!email||!password) { setError("Please fill in all fields."); return; }
+  setLoading(true); setError("");
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  setLoading(false);
+  if (error) { setError(error.message); return; }
+}
   return (
     <div style={{minHeight:"100vh",background:B.bg,display:"flex",alignItems:"center",justifyContent:"center",padding:20}}>
       <div style={{width:"100%",maxWidth:460}}>
@@ -982,7 +982,14 @@ function LoginPage({ setPage, onAuth }) {
             onKeyDown={e=>e.key==="Enter"&&handleLogin()}/>
 
           <div style={{textAlign:"right",marginTop:-10,marginBottom:20}}>
-            <span style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:B.teal,cursor:"pointer"}}>Forgot password?</span>
+            <span 
+  style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:B.teal,cursor:"pointer"}}
+  onClick={async()=>{
+    if(!email){setError("Enter your email above first.");return;}
+    await supabase.auth.resetPasswordForEmail(email);
+    setError(""); alert("Password reset email sent!");
+  }}
+>Forgot password?</span>
           </div>
 
           <button className="btn-teal" onClick={handleLogin} disabled={loading} style={{width:"100%",padding:"14px",fontSize:15}}>
@@ -2772,35 +2779,99 @@ const SHOP_PRODUCTS = [
   { id:"l5",  cat:"Lawn",        icon:"📦", name:"Seed & Feed Bundle",              price:32.99, sale:27.99, popular:true,  desc:"2kg grass seed + 2kg starter fertilizer. Post-aeration kit." },
 ];
 
-export default function BorrowBarn() {
+ export default function BorrowBarn() {
   const [page, setPage]       = useState("home");
   const [user, setUser]       = useState(null);
   const [tokens, setTokens]   = useState(0);
   const [txns, setTxns]       = useState([]);
   const [rentals, setRentals] = useState([]);
+  const [authLoading, setAuthLoading] = useState(true);
 
-  function onAuth(userData) {
-    setUser(userData);
-    if (userData.email.includes("returning")) {
-      setTokens(85);
-      setTxns([
-        {id:1,type:"purchase",desc:"Bought Value Pack – 120 TT",tokens:120,date:"2026-03-15"},
-        {id:2,type:"rent",    desc:"Rented Lawn Mower – 2 days",tokens:-50, date:"2026-03-20"},
-        {id:3,type:"partner", desc:"Partner earnings – Power Washer (Apr)",tokens:128,date:"2026-04-01"},
-        {id:4,type:"donate",  desc:"Donated String Trimmer",     tokens:40,  date:"2026-03-28"},
-      ]);
-    } else {
-      setTokens(0);
+  // ── Supabase Auth ──────────────────────────────
+  useEffect(()=>{
+    // Get initial session
+    supabase.auth.getSession().then(({ data:{ session }})=>{
+      if(session) fetchProfile(session.user);
+      else setAuthLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data:{ subscription }} = supabase.auth.onAuthStateChange((_event, session)=>{
+      if(session) fetchProfile(session.user);
+      else {
+        setUser(null);
+        setTokens(0);
+        setTxns([]);
+        setRentals([]);
+        setAuthLoading(false);
+      }
+    });
+
+    return ()=> subscription.unsubscribe();
+  },[]);
+
+  async function fetchProfile(authUser) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", authUser.id)
+      .single();
+
+    if(data) {
+      setUser({
+        id:       authUser.id,
+        name:     data.name || authUser.email.split("@")[0],
+        email:    authUser.email,
+        plan:     data.membership || "curious",
+        referral: data.referral_code,
+        loyalty:  data.loyalty_points || 0,
+        birthday: data.birthday,
+      });
+      setTokens(data.tokens || 0);
     }
+    setAuthLoading(false);
     setPage("library");
   }
 
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    setUser(null);
+    setTokens(0);
+    setTxns([]);
+    setRentals([]);
+    setPage("home");
+  }
+
+  // ── Legacy onAuth (keep for now as fallback) ──
+  function onAuth(userData) {
+    setUser(userData);
+    setTokens(0);
+    setPage("library");
+  }
+
+  // ── Auth loading screen ────────────────────────
+  if(authLoading) return (
+    <div style={{
+      minHeight:"100vh", background:B.bg,
+      display:"flex", alignItems:"center", justifyContent:"center",
+      flexDirection:"column", gap:16,
+    }}>
+      <AppIcon size={72}/>
+      <div style={{
+        fontFamily:"'DM Sans',sans-serif",
+        fontSize:14, color:B.muted,
+        animation:"pulse 1.5s ease-in-out infinite",
+      }}>
+        Loading The Borrow Barn…
+      </div>
+    </div>
+  );
   function onSignOut() { setUser(null); setTokens(0); setTxns([]); setRentals([]); setPage("home"); }
 
   return (
     <div style={{minHeight:"100vh",background:B.bg,fontFamily:"'DM Sans',sans-serif",color:B.text}}>
       <style>{CSS}</style>
-      <Nav page={page} setPage={setPage} user={user} tokens={tokens} onSignOut={onSignOut}/>
+      <Nav page={page} setPage={setPage} user={user} tokens={tokens} onSignOut={handleSignOut}/>
 
       {page==="home"    && <HomePage setPage={setPage}/>}
       {page==="shop"    && <ShopPage user={user} memberPlan={user?.plan}/>}
@@ -2809,7 +2880,7 @@ export default function BorrowBarn() {
       {page==="login"   && <LoginPage setPage={setPage} onAuth={onAuth}/>}
       {page==="tokens"  && user && <TokensPage tokens={tokens} setTokens={setTokens} txns={txns} setTxns={setTxns}/>}
       {page==="library" && user && <LibraryPage tokens={tokens} setTokens={setTokens} txns={txns} setTxns={setTxns} rentals={rentals} setRentals={setRentals} setPage={setPage}/>}
-      {page==="account" && user && <AccountPage user={user} tokens={tokens} txns={txns} rentals={rentals} setPage={setPage} onSignOut={onSignOut}/>}
+      {page==="account" && user && <AccountPage user={user} tokens={tokens} txns={txns} rentals={rentals} setPage={setPage} onSignOut={handleSignOut}/>}
       {page==="partner" && <PartnerPage setPage={setPage} user={user} tokens={tokens} setTokens={setTokens} txns={txns} setTxns={setTxns}/>}
     </div>
   );
