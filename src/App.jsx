@@ -183,6 +183,10 @@ const CSS = `
   .btn-amber:hover{filter:brightness(1.08);}
   .nav-link{fontFamily:'DM Sans',sans-serif;fontWeight:600;fontSize:14px;color:${B.mutedUp};cursor:pointer;transition:color 0.15s;background:none;border:none;padding:0;}
   .nav-link:hover{color:${B.teal};}
+  .nav-desktop{display:none;}
+  .nav-mobile{display:none;}
+  @media(max-width:1024px){.nav-desktop{display:none!important;}.nav-mobile{display:flex!important;}}
+  @media(min-width:1025px){.nav-desktop{display:flex!important;}.nav-mobile{display:none!important;}}
   .glow-teal{box-shadow:0 0 40px ${B.tealGlow};}
   .pulse{animation:pulse 2.5s ease infinite;}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 ${B.tealGlow}}50%{box-shadow:0 0 0 10px transparent}}
