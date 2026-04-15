@@ -183,10 +183,7 @@ body{background:${B.bg};overflow-x:hidden;}
   .btn-amber:hover{filter:brightness(1.08);}
   .nav-link{fontFamily:'DM Sans',sans-serif;fontWeight:600;fontSize:14px;color:${B.mutedUp};cursor:pointer;transition:color 0.15s;background:none;border:none;padding:0;}
   .nav-link:hover{color:${B.teal};}
-  .nav-desktop{display:none;}
-  .nav-desktop{display:flex;}
-  .nav-mobile{display:none;}
-  @media(max-width:9999px){.nav-desktop{display:none!important;}.nav-mobile{display:flex!important;}}
+  .nav-desktop{display:flex;}.nav-mobile{display:none;}@media(max-width:9999px){.nav-desktop{display:none!important;}.nav-mobile{display:flex!important;}}
   .pulse{animation:pulse 2.5s ease infinite;}
   @keyframes pulse{0%,100%{box-shadow:0 0 0 0 ${B.tealGlow}}50%{box-shadow:0 0 0 10px transparent}}
   .input-dark{width:100%;padding:13px 16px;background:${B.surfaceUp};border:1px solid ${B.border};border-radius:10px;color:${B.text};font-size:14px;margin-bottom:16px;display:block;}
