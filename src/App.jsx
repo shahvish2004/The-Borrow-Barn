@@ -778,11 +778,22 @@ function SignUpPage({ setPage, onAuth }) {
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  function handleSubmit() {
-    if (!form.name||!form.email||!form.password||!agree) return;
-    setLoading(true);
-    setTimeout(()=>{ onAuth({ name:form.name, email:form.email, plan }); }, 900);
-  }
+  const [error, setError] = useState(null);
+const [success, setSuccess] = useState(false);
+
+async function handleSubmit() {
+  if (!form.name||!form.email||!form.password||!agree) return;
+  setLoading(true);
+  setError(null);
+  const { error } = await supabase.auth.signUp({
+    email: form.email,
+    password: form.password,
+    options: { data: { name: form.name, plan } }
+  });
+  setLoading(false);
+  if (error) { setError(error.message); return; }
+  setSuccess(true);
+}
 
   return (
     <div style={{minHeight:"100vh",background:B.bg,display:"flex"}}>
@@ -908,7 +919,8 @@ function SignUpPage({ setPage, onAuth }) {
                   I agree to the <span style={{color:B.teal}}>Terms of Service</span> and <span style={{color:B.teal}}>Service Agreement</span>. I understand deposits are refundable on return of tools in good condition.
                 </p>
               </div>
-
+{error && <div style={{background:"rgba(212,80,48,0.1)",border:"1px solid rgba(212,80,48,0.3)",borderRadius:8,padding:"10px 14px",marginBottom:14,fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.red}}>{error}</div>}
+{success && <div style={{background:"rgba(90,148,72,0.1)",border:"1px solid rgba(90,148,72,0.3)",borderRadius:8,padding:"10px 14px",marginBottom:14,fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.amber}}>✅ Check your email to confirm your account!</div>}
               <button className="btn-teal" onClick={handleSubmit} disabled={!form.name||!form.email||!form.password||!agree||loading} style={{width:"100%",padding:"14px",fontSize:15}}>
                 {loading?"Creating your account…":"Create Account →"}
               </button>
