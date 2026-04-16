@@ -43,8 +43,8 @@ const LOGO_CREAM = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAA
 
 const DELIVERY_ZONES = [
   { id:"z1", label:"Zone 1", range:"0 – 5 km",   avgKm:3,  basePrice:15, desc:"Your immediate neighbourhood",  eta:"30–45 min drive time" },
-  { id:"z2", label:"Zone 2", range:"5 – 15 km",  avgKm:10, basePrice:29, desc:"Central Waterloo Region",        eta:"45–60 min drive time" },
-  { id:"z3", label:"Zone 3", range:"15 – 25 km", avgKm:20, basePrice:45, desc:"Greater Waterloo Area",           eta:"60–90 min drive time" },
+  { id:"z2", label:"Zone 2", range:"5 – 15 km",  avgKm:10, basePrice:29, desc:"Central service area",           eta:"45–60 min drive time" },
+  { id:"z3", label:"Zone 3", range:"15 – 25 km", avgKm:20, basePrice:45, desc:"Greater local area",             eta:"60–90 min drive time" },
   { id:"z4", label:"Zone 4", range:"25 – 40 km", avgKm:32, basePrice:65, desc:"Extended service area",          eta:"90–120 min drive time" },
 ];
 
@@ -101,10 +101,13 @@ const FUEL_LABELS = {
   none:     { icon:"🔧", label:"No fuel required",           color:"#6a8eaa", tip:"Manual or human-powered tool — no fuel needed." },
 };
 
- const TOKEN_PACKS= [
-  { id:"starter", tokens:50,  price:50,  label:"Starter",  bonus:0,  tag:null,         perToken:"1.00", color:B.mutedUp,  desc:"Perfect for occasional renters. One or two jobs covered." },
-  { id:"value",   tokens:120, price:100, label:"Value",    bonus:20, tag:"MOST POPULAR",perToken:"0.83", color:B.teal,    desc:"Extra 20 bonus tokens included. The smart choice." },
-  { id:"pro",     tokens:275, price:200, label:"Pro",      bonus:75, tag:"BEST VALUE",  perToken:"0.73", color:B.amber,   desc:"75 bonus tokens. For frequent borrowers and serious projects." },
+const TOKEN_PACKS = [
+  { id:"5-pack",   tokens:5,   price:6.25,   label:"Quick Fix",      bonus:0, tag:null,           perToken:"1.25", color:B.mutedUp, desc:"Perfect for a single small job or a quick weekend pickup." },
+  { id:"25-pack",  tokens:25,  price:31.25,  label:"Weekend Pack",   bonus:0, tag:null,           perToken:"1.25", color:B.blue,    desc:"A flexible pack for occasional borrowers tackling a few projects." },
+  { id:"50-pack",  tokens:50,  price:62.5,   label:"Starter",        bonus:0, tag:null,           perToken:"1.25", color:B.mutedUp, desc:"A solid starting point for regular lawn and garden rentals." },
+  { id:"100-pack", tokens:100, price:125,    label:"Builder",        bonus:0, tag:"MOST POPULAR", perToken:"1.25", color:B.teal,    desc:"Best for active members managing multiple projects through the month." },
+  { id:"150-pack", tokens:150, price:187.5,  label:"Project Stack",  bonus:0, tag:null,           perToken:"1.25", color:B.yellow,  desc:"Ideal when you need several tools across larger seasonal work." },
+  { id:"200-pack", tokens:200, price:250,    label:"Pro Stock",      bonus:0, tag:"BEST VALUE",   perToken:"1.25", color:B.amber,   desc:"For the heaviest borrowers who want a deep token balance ready to go." },
 ];
 
 const DONATE_MAP = {
@@ -228,7 +231,7 @@ function TranscendBadge({ small=false }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // LOGO SYSTEM — The Borrow Barn™
 // Uses the approved barn-with-tools logo image, embedded as base64 PNG
-// © 2026 The Borrow Barn · Waterloo ON · TM Registration Pending
+// © 2026 The Borrow Barn · TM Registration Pending
 // ══════════════════════════════════════════════════════════════════════════════
 
 // ─── 1. APP ICON — square badge ──────────────────────────────────────────────
@@ -452,7 +455,7 @@ display:"flex",alignItems:"center",justifyContent:"space-between",
 // ══════════════════════════════════════════════════════════════════════════════
 // PAGE: HOME / LANDING
 // ══════════════════════════════════════════════════════════════════════════════
-function HomePage({ setPage }) {
+function HomePage({ setPage, user, onSelectPlan, membershipCheckoutLoading }) {
   const isMobile = useIsMobile();
   return (
     <div style={{minHeight:"100vh",background:B.bg}}>
@@ -480,10 +483,10 @@ function HomePage({ setPage }) {
                 <span style={{
                   background:`linear-gradient(90deg,${B.teal},#e8a828)`,
                   WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
-                }}>Swap what<br/>you don't.</span>
+                }}>Lend what<br/>you don't.</span>
               </h1>
               <p className="fade-up fade-up-3" style={{fontFamily:"'DM Sans',sans-serif",fontSize:17,color:B.mutedUp,lineHeight:1.75,maxWidth:460,marginBottom:32}}>
-                The Borrow Barn is Waterloo's neighbourhood neighbourhood tool library. Buy tokens, rent tools by the day — or earn tokens by adding your own tools to the platform.
+                The Borrow Barn is the world's tool library, starting next door. Buy tokens, rent tools by the day, or earn tokens by adding your own tools to the platform.
               </p>
               <div className="fade-up fade-up-3" style={{display:"flex",gap:12,flexWrap:"wrap",marginBottom:32}}>
                 <button className="btn-teal" onClick={()=>setPage("signup")} style={{fontSize:16,padding:"15px 30px"}}>Get Started Free →</button>
@@ -575,8 +578,17 @@ function HomePage({ setPage }) {
                     </div>
                   ))}
                 </div>
-                <button className={plan.popular?"btn-teal":"btn-ghost"} onClick={()=>setPage("signup")} style={{width:"100%",padding:"11px",fontSize:13}}>
-                  {plan.price===0?"Join The Barn →":"Join The Barn →"}
+                <button
+                  className={plan.popular?"btn-teal":"btn-ghost"}
+                  onClick={() => user ? onSelectPlan(plan.id) : setPage("signup")}
+                  disabled={membershipCheckoutLoading===plan.id}
+                  style={{width:"100%",padding:"11px",fontSize:13,opacity:membershipCheckoutLoading===plan.id?0.7:1}}
+                >
+                  {membershipCheckoutLoading===plan.id
+                    ? "Redirecting…"
+                    : plan.price===0
+                      ? (user ? "Current free access →" : "Join The Barn →")
+                      : (user ? "Upgrade with Stripe →" : "Join The Barn →")}
                 </button>
               </div>
             ))}
@@ -1016,15 +1028,47 @@ async function handleLogin() {
 // ══════════════════════════════════════════════════════════════════════════════
 // PAGE: TOKEN STORE
 // ══════════════════════════════════════════════════════════════════════════════
-function TokensPage({ tokens, setTokens, txns, setTxns }) {
-  const [purchased, setPurchased] = useState(null);
+function TokensPage({ tokens, setTokens, txns, setTxns, checkoutStatus, clearCheckoutStatus }) {
+  const [checkoutLoading, setCheckoutLoading] = useState(null);
+  const [checkoutError, setCheckoutError] = useState("");
   const [donateForm, setDonateForm] = useState({ name:"", category:"Lawn Care", condition:"Good", notes:"" });
   const [tab, setTab] = useState("buy"); // buy | donate | history
 
-  function buy(pkg) {
-    setTokens(t=>t+pkg.tokens);
-    setTxns(p=>[{id:Date.now(),type:"purchase",desc:`Bought ${pkg.label} Pack – ${pkg.tokens} TT`,tokens:pkg.tokens,date:new Date().toLocaleDateString("en-CA")},...p]);
-    setPurchased(pkg);
+  async function buy(pkg) {
+    setCheckoutLoading(pkg.id);
+    setCheckoutError("");
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        throw new Error("Please sign in again before starting checkout.");
+      }
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          type: "tokens",
+          tokens: pkg.tokens,
+        }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok || !payload?.url) {
+        throw new Error(payload?.error || "Unable to start Stripe checkout right now.");
+      }
+
+      window.location.href = payload.url;
+    } catch (error) {
+      setCheckoutError(error.message || "Unable to start Stripe checkout right now.");
+    } finally {
+      setCheckoutLoading(null);
+    }
   }
 
   function donate() {
@@ -1080,14 +1124,32 @@ function TokensPage({ tokens, setTokens, txns, setTxns }) {
         {/* BUY TAB */}
         {tab==="buy"&&(
           <div>
-            {purchased&&(
+            {checkoutStatus==="success"&&(
               <div style={{background:B.greenDim,border:`1px solid ${B.green}44`,borderRadius:14,padding:"16px 20px",marginBottom:28,display:"flex",alignItems:"center",gap:12}}>
                 <span style={{fontSize:24}}>🎉</span>
                 <div>
-                  <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:15,color:B.green}}>Success! {purchased.tokens} Tokens added to your account</div>
-                  <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.mutedUp,marginTop:2}}>Your new balance: {tokens} TT</div>
+                  <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:15,color:B.green}}>Checkout complete</div>
+                  <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.mutedUp,marginTop:2}}>Your payment went through. Tokens should appear on your account shortly after the webhook finishes.</div>
                 </div>
-                <button onClick={()=>setPurchased(null)} style={{marginLeft:"auto",background:"none",border:"none",color:B.muted,cursor:"pointer",fontSize:18}}>✕</button>
+                <button onClick={clearCheckoutStatus} style={{marginLeft:"auto",background:"none",border:"none",color:B.muted,cursor:"pointer",fontSize:18}}>✕</button>
+              </div>
+            )}
+
+            {(checkoutStatus==="cancelled" || checkoutStatus==="cancel" || checkoutStatus==="canceled")&&(
+              <div style={{background:B.amberPale,border:"1px solid rgba(255,184,48,0.25)",borderRadius:14,padding:"16px 20px",marginBottom:28,display:"flex",alignItems:"center",gap:12}}>
+                <span style={{fontSize:24}}>🛒</span>
+                <div>
+                  <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:15,color:B.amber}}>Checkout cancelled</div>
+                  <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.mutedUp,marginTop:2}}>No charge was made. You can choose another pack whenever you're ready.</div>
+                </div>
+                <button onClick={clearCheckoutStatus} style={{marginLeft:"auto",background:"none",border:"none",color:B.muted,cursor:"pointer",fontSize:18}}>✕</button>
+              </div>
+            )}
+
+            {checkoutError&&(
+              <div style={{background:B.redDim,border:"1px solid rgba(212,80,48,0.25)",borderRadius:14,padding:"16px 20px",marginBottom:28}}>
+                <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:15,color:B.red,marginBottom:4}}>Unable to start checkout</div>
+                <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.mutedUp}}>{checkoutError}</div>
               </div>
             )}
 
@@ -1131,8 +1193,8 @@ function TokensPage({ tokens, setTokens, txns, setTxns }) {
                     </div>
                   </div>
 
-                  <button className="btn-teal" onClick={()=>buy(pkg)} style={{width:"100%",padding:"12px",fontSize:14}}>
-                    Purchase ${pkg.price} →
+                  <button className="btn-teal" onClick={()=>buy(pkg)} disabled={checkoutLoading===pkg.id} style={{width:"100%",padding:"12px",fontSize:14,opacity:checkoutLoading===pkg.id?0.7:1}}>
+                    {checkoutLoading===pkg.id ? "Redirecting to Stripe…" : `Purchase $${pkg.price} →`}
                   </button>
                 </div>
               ))}
@@ -1624,7 +1686,7 @@ useEffect(() => {
                 {/* 4. Address + date */}
                 <div>
                   <label className="lbl">Your Address</label>
-                  <input className="input-dark" style={{marginBottom:10}} placeholder="123 Maple St, Waterloo, ON N2L 1A1" value={dlvAddr} onChange={e=>setDlvAddr(e.target.value)}/>
+                  <input className="input-dark" style={{marginBottom:10}} placeholder="123 Main St, Your City, Province" value={dlvAddr} onChange={e=>setDlvAddr(e.target.value)}/>
                   <label className="lbl">Preferred Date</label>
                   <input className="input-dark" type="date" value={dlvDate} onChange={e=>setDlvDate(e.target.value)} style={{marginBottom:4}}/>
                   <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,color:B.muted}}>📞 We'll call to confirm a 2-hr arrival window.</p>
@@ -1703,7 +1765,7 @@ useEffect(() => {
 // ══════════════════════════════════════════════════════════════════════════════
 // PAGE: ACCOUNT
 // ══════════════════════════════════════════════════════════════════════════════
-function AccountPage({ user, tokens, txns, rentals, setPage, onSignOut }) {
+function AccountPage({ user, tokens, txns, rentals, setPage, onSignOut, onSelectPlan, membershipCheckoutLoading }) {
   const totalSpent = txns.filter(t=>t.tokens<0).reduce((a,t)=>a+Math.abs(t.tokens),0);
   const totalEarned = txns.filter(t=>t.tokens>0).reduce((a,t)=>a+t.tokens,0);
   const plan = MEMBERSHIP_PLANS.find(p=>p.id===user.plan)||MEMBERSHIP_PLANS[0];
@@ -1804,7 +1866,9 @@ function AccountPage({ user, tokens, txns, rentals, setPage, onSignOut }) {
             <div style={{fontFamily:"'DM Sans',sans-serif",fontWeight:800,fontSize:20,color:B.white}}>{plan.name}</div>
             <div style={{fontFamily:"'DM Sans',sans-serif",fontSize:13,color:B.muted,marginTop:2}}>{plan.price===0?"No monthly fee":`$${plan.price}/month`}</div>
           </div>
-          <button className="btn-ghost" style={{padding:"10px 20px",fontSize:13}}>Upgrade Plan</button>
+          <button className="btn-ghost" onClick={()=>onSelectPlan("member")} disabled={membershipCheckoutLoading==="member"} style={{padding:"10px 20px",fontSize:13,opacity:membershipCheckoutLoading==="member"?0.7:1}}>
+            {membershipCheckoutLoading==="member" ? "Redirecting…" : "Upgrade Plan"}
+          </button>
         </div>
 
       </div>
@@ -2179,7 +2243,7 @@ function PartnerPage({ setPage, user, tokens, setTokens, txns, setTxns }) {
 // ══════════════════════════════════════════════════════════════════════════════
 // PAGE: PRICING — market comparison + fuel policy
 // ══════════════════════════════════════════════════════════════════════════════
-function PricingPage({ setPage }) {
+function PricingPage({ setPage, user, onSelectPlan, membershipCheckoutLoading }) {
   const [filter, setFilter] = useState("All");
  const shown = TOOLS.filter(t => filter === "All" || t.category === filter);
 const avgSaving = Math.round(TOOLS.reduce((a,t)=>a+(1-t.credits/t.marketRate)*100,0)/TOOLS.length);
@@ -2322,8 +2386,15 @@ const avgSaving = Math.round(TOOLS.reduce((a,t)=>a+(1-t.credits/t.marketRate)*10
           ))}
         </div>
 
-        <div style={{textAlign:"center",marginTop:32}}>
-          <button className="btn-teal" onClick={()=>setPage("signup")} style={{padding:"14px 36px",fontSize:15}}>Start Renting →</button>
+        <div style={{textAlign:"center",marginTop:32,display:"flex",justifyContent:"center",gap:12,flexWrap:"wrap"}}>
+          <button className="btn-teal" onClick={()=>user ? setPage("tokens") : setPage("signup")} style={{padding:"14px 36px",fontSize:15}}>
+            {user ? "Buy Tokens →" : "Start Renting →"}
+          </button>
+          {user && (
+            <button className="btn-ghost" onClick={()=>onSelectPlan("member")} disabled={membershipCheckoutLoading==="member"} style={{padding:"14px 30px",fontSize:15,opacity:membershipCheckoutLoading==="member"?0.7:1}}>
+              {membershipCheckoutLoading==="member" ? "Redirecting…" : "Upgrade Membership →"}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -2591,7 +2662,7 @@ function ShopPage({ user, memberPlan }) {
           {deliverShop&&(
             <div style={{marginBottom:16}}>
               <label className="lbl">Delivery Address</label>
-              <input className="input-dark" placeholder="123 Maple St, Waterloo, ON N2L 1A1" value={address} onChange={e=>setAddress(e.target.value)}/>
+              <input className="input-dark" placeholder="123 Main St, Your City, Province" value={address} onChange={e=>setAddress(e.target.value)}/>
               <div style={{background:"rgba(212,138,30,0.04)",border:`1px solid ${B.teal}22`,borderRadius:9,padding:"9px 12px",marginTop:-10,marginBottom:14}}>
                 <p style={{fontFamily:"'DM Sans',sans-serif",fontSize:12,color:B.teal}}>📦 Next business day delivery · $15 flat fee</p>
               </div>
@@ -2669,7 +2740,7 @@ function ProductCard({ p, discount, onAdd, inCart }) {
           {(p.sale||discount>0)&&<span style={{fontFamily:"'DM Sans',sans-serif",fontSize:11,color:B.muted,textDecoration:"line-through",marginLeft:5}}>${p.price.toFixed(2)}</span>}
         </div>
         <button onClick={onAdd} style={{
-          padding:"7px 14px",borderRadius:8,border:"none",cursor:"pointer",
+          padding:"7px 14px",borderRadius:8,cursor:"pointer",
           fontFamily:"'DM Sans',sans-serif",fontWeight:700,fontSize:12,
           background:inCart?`${B.teal}20`:B.teal,
           color:inCart?"#0a0e14":"#0a0e14",
@@ -2785,6 +2856,9 @@ const SHOP_PRODUCTS = [
   const [tokens, setTokens]   = useState(0);
   const [txns, setTxns]       = useState([]);
   const [rentals, setRentals] = useState([]);
+  const [checkoutStatus, setCheckoutStatus] = useState(null);
+  const [pendingRedirectPage, setPendingRedirectPage] = useState(null);
+  const [membershipCheckoutLoading, setMembershipCheckoutLoading] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
   // ── Supabase Auth ──────────────────────────────
@@ -2810,7 +2884,36 @@ const SHOP_PRODUCTS = [
     return ()=> subscription.unsubscribe();
   },[]);
 
-  async function fetchProfile(authUser) {
+  useEffect(() => {
+    if (authLoading) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const redirectPage = params.get("page");
+    const checkout = params.get("checkout");
+
+    async function handleRedirect() {
+      if (checkout) setCheckoutStatus(checkout);
+      if (redirectPage) setPendingRedirectPage(redirectPage);
+
+      if (checkout === "success") {
+        await refreshProfileFromSession(true);
+      }
+
+      if (checkout || redirectPage) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+
+    handleRedirect();
+  }, [authLoading]);
+
+  useEffect(() => {
+    if (authLoading || !user || !pendingRedirectPage) return;
+    setPage(pendingRedirectPage);
+    setPendingRedirectPage(null);
+  }, [authLoading, user, pendingRedirectPage]);
+
+  async function fetchProfile(authUser, preservePage=false) {
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
@@ -2822,7 +2925,7 @@ const SHOP_PRODUCTS = [
         id:       authUser.id,
         name:     data.name || authUser.email.split("@")[0],
         email:    authUser.email,
-        plan:     data.membership || "curious",
+        plan:     data.membership || "community",
         referral: data.referral_code,
         loyalty:  data.loyalty_points || 0,
         birthday: data.birthday,
@@ -2830,7 +2933,61 @@ const SHOP_PRODUCTS = [
       setTokens(data.tokens || 0);
     }
     setAuthLoading(false);
-    setPage("library");
+    if (!preservePage) setPage("library");
+  }
+
+  async function refreshProfileFromSession(preservePage=false) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+      await fetchProfile(session.user, preservePage);
+    }
+  }
+
+  async function startMembershipCheckout(planId) {
+    if (!user) {
+      setPage("signup");
+      return;
+    }
+
+    if (!planId || planId === "community") {
+      setPage("account");
+      return;
+    }
+
+    setMembershipCheckoutLoading(planId);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        throw new Error("Please sign in again before starting checkout.");
+      }
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          type: "membership",
+          plan: planId,
+        }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+
+      if (!response.ok || !payload?.url) {
+        throw new Error(payload?.error || "Unable to start membership checkout right now.");
+      }
+
+      window.location.href = payload.url;
+    } catch (error) {
+      console.error(error);
+      alert(error.message || "Unable to start membership checkout right now.");
+    } finally {
+      setMembershipCheckoutLoading(null);
+    }
   }
 
   async function handleSignOut() {
@@ -2873,14 +3030,14 @@ const SHOP_PRODUCTS = [
       <style>{CSS}</style>
       <Nav page={page} setPage={setPage} user={user} tokens={tokens} onSignOut={handleSignOut}/>
 
-      {page==="home"    && <HomePage setPage={setPage}/>}
+      {page==="home"    && <HomePage setPage={setPage} user={user} onSelectPlan={startMembershipCheckout} membershipCheckoutLoading={membershipCheckoutLoading}/>}
       {page==="shop"    && <ShopPage user={user} memberPlan={user?.plan}/>}
-      {page==="pricing" && <PricingPage setPage={setPage}/>}
+      {page==="pricing" && <PricingPage setPage={setPage} user={user} onSelectPlan={startMembershipCheckout} membershipCheckoutLoading={membershipCheckoutLoading}/>}
       {page==="signup"  && <SignUpPage setPage={setPage} onAuth={onAuth}/>}
       {page==="login"   && <LoginPage setPage={setPage} onAuth={onAuth}/>}
-      {page==="tokens"  && user && <TokensPage tokens={tokens} setTokens={setTokens} txns={txns} setTxns={setTxns}/>}
+      {page==="tokens"  && user && <TokensPage tokens={tokens} setTokens={setTokens} txns={txns} setTxns={setTxns} checkoutStatus={checkoutStatus} clearCheckoutStatus={()=>setCheckoutStatus(null)}/>}
       {page==="library" && user && <LibraryPage tokens={tokens} setTokens={setTokens} txns={txns} setTxns={setTxns} rentals={rentals} setRentals={setRentals} setPage={setPage}/>}
-      {page==="account" && user && <AccountPage user={user} tokens={tokens} txns={txns} rentals={rentals} setPage={setPage} onSignOut={handleSignOut}/>}
+      {page==="account" && user && <AccountPage user={user} tokens={tokens} txns={txns} rentals={rentals} setPage={setPage} onSignOut={handleSignOut} onSelectPlan={startMembershipCheckout} membershipCheckoutLoading={membershipCheckoutLoading}/>}
       {page==="partner" && <PartnerPage setPage={setPage} user={user} tokens={tokens} setTokens={setTokens} txns={txns} setTxns={setTxns}/>}
     </div>
   );
